@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.RadioButton
+
 
 class SeatSelection : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,9 +26,14 @@ class SeatSelection : AppCompatActivity() {
 
         val confirm : Button = findViewById(R.id.confirm)
         confirm.setOnClickListener(){
-            Toast.makeText(this,"Enjoy the movie! :D", Toast.LENGTH_LONG).show()
-            var intent : Intent = Intent(this,catalogo::class.java)
-            startActivity(intent)
+           if (obtenerAsientoSeleccionado()==null) {
+               Toast.makeText(this,"Select a seat D:" , Toast.LENGTH_LONG).show()
+           }else if (obtenerAsientoSeleccionado() != null){
+               Toast.makeText(this,"Enjoy the movie! :D ", Toast.LENGTH_LONG).show()
+               var intent : Intent = Intent(this,catalogo::class.java)
+               startActivity(intent)
+           }
+
         }
 
         val row1: RadioGroup= findViewById(R.id.row1)
@@ -70,6 +77,25 @@ class SeatSelection : AppCompatActivity() {
                 row4.check(checkedId)
             }
         }
+    }
+    fun obtenerAsientoSeleccionado(): String? {
+
+        val row1: RadioGroup= findViewById(R.id.row1)
+        val row2: RadioGroup= findViewById(R.id.row2)
+        val row3: RadioGroup= findViewById(R.id.row3)
+        val row4: RadioGroup= findViewById(R.id.row4)
+
+        val todasLasFilas: List<RadioGroup> = listOf(row1, row2, row3, row4)
+
+        todasLasFilas.forEach { fila ->
+            val checkedRadioButtonId = fila.checkedRadioButtonId
+            if (checkedRadioButtonId != -1) {
+                val selectedRadioButton = findViewById<RadioButton>(checkedRadioButtonId)
+                return selectedRadioButton.text.toString()
+            }
+        }
+
+        return null // No se ha seleccionado ningún asiento en ninguna fila
     }
 
 
